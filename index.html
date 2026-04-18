@@ -265,68 +265,58 @@
             font-family: "Rubik Spray Paint", system-ui;
         }
 
-/* --- СТИЛІ ДЛЯ ПОТОПУ (ЗАГЛУШКА ДЛЯ ГОРИЗОНТАЛЬНОГО РЕЖИМУ) --- */
+/* --- ВИПРАВЛЕНИЙ ПОТОП --- */
 #landscape-flood {
-    display: none; /* Спочатку приховано */
     position: fixed;
     top: 0; left: 0;
     width: 100%; height: 100%;
-    background-color: #001a33; /* Колір глибокої води */
-    z-index: 9999; /* Поверх усього */
+    background-color: rgba(0, 26, 51, 0); /* Спочатку прозорий фон */
+    z-index: 9999;
     color: white;
     text-align: center;
-    overflow: hidden; /* Щоб хвиля не вилазила */
+    overflow: hidden;
     font-family: "Rubik Spray Paint", system-ui;
+    
+    /* Важливо: спочатку ігноруємо дотики, щоб можна було клацати сайт */
+    pointer-events: none; 
+    transition: background-color 1s ease;
 }
 
-/* Контент з текстом (спочатку прихований, щоб з'явитися після хвилі) */
+.water-wave {
+    position: absolute;
+    bottom: -150%; /* Хвиля ДУЖЕ глибоко під екраном */
+    left: -25%; /* Трохи ширша за екран для ефекту гойдання */
+    width: 150%; height: 150%;
+    background-color: #0077be;
+    border-top: 15px solid #a2d2ff; /* Піна */
+    border-radius: 40% 40% 0 0;
+    
+    /* Анімація підняття ТА легкого гойдання */
+    transition: bottom 2s cubic-bezier(0.42, 0, 0.58, 1);
+}
+
 .flood-content {
     position: relative;
     z-index: 10;
     padding: 10% 15%;
     opacity: 0;
-    transform: translateY(20px);
+    transition: opacity 1s ease;
 }
 
-/* Сама хвиля (анімована) */
-.water-wave {
-    position: absolute;
-    bottom: -100%; /* Спочатку хвиля повністю під екраном */
-    left: 0;
-    width: 100%; height: 150%; /* Хвиля вища за екран, щоб залити все */
-    background-color: #0077be; /* Колір океану */
-    background-image: url('wave_pattern.png'); /* Необов'язково: текстура хвилі (якщо є) */
-    background-size: contain;
-    background-repeat: repeat-x;
-    border-top: 10px solid #a2d2ff; /* Світла піна */
-    border-radius: 50% 50% 0 0; /* Форма синусоїди */
-    
-    transition: bottom 2.5s ease-out; /* Плавне підняття хвилі */
-}
-
-/* --- МАГІЯ МЕДІАЗАПИТІВ (АКТИВАЦІЯ ПОТОПУ) --- */
+/* --- АКТИВАЦІЯ ПРИ ПОВОРОТІ --- */
 @media (orientation: landscape) and (max-height: 550px) {
-    /* Показуємо блок потопу тільки в горизонтальному режимі */
     #landscape-flood {
-        display: block;
+        background-color: rgba(0, 26, 51, 1); /* Фон стає темним */
+        pointer-events: auto; /* Тепер блок перекриває все */
     }
 
-    /* Анімація підняття хвилі (заливає трюм за 2.5 секунди) */
     #landscape-flood .water-wave {
-        bottom: 0; /* Хвиля піднімається до верху */
+        bottom: -20%; /* Хвиля вилітає знизу і заливає все */
     }
 
-    /* Плавна поява тексту через 1.5 секунди після початку потопу */
     #landscape-flood .flood-content {
-        animation: fadeInText 1.5s forwards 1.5s;
-    }
-}
-
-/* Ключові кадри для появи тексту */
-@keyframes fadeInText {
-    to {
         opacity: 1;
-        transform: translateY(0);
+        transition-delay: 1.5s; /* Текст з'явиться, коли хвиля допливе */
     }
 }
         
@@ -334,9 +324,10 @@
 </head>
 <body>
     <div id="landscape-flood">
-    <div class="water-wave"></div> <div class="flood-content">
+    <div class="water-wave"></div>
+    <div class="flood-content">
         <h2>ТРЮМ ЗАЛИТО! 🌊</h2>
-        <p>Пірате, ти перевернув корабель! Негайно поверни телефон вертикально, поки ми не пішли на дно!</p>
+        <p>Пірате, ти перевернув корабель! Негайно поверни телефон вертикально!</p>
     </div>
 </div>
 
