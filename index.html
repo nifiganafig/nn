@@ -73,21 +73,27 @@
 <script>
 function sendAnswer(choice) {
     const name = document.getElementById("name").value;
-    const result = document.getElementById("result");
 
     if (!name) {
         alert("Введи ім’я!");
         return;
     }
 
-    // 👉 ВСТАВ СЮДИ СВОЮ ССЫЛКУ Google Forms
-    const formUrl = "https://docs.google.com/forms/d/e/1FAIpQLSc5VQU1Ygi6v-CeRc8ju4rDf6Os0_vS-vC6IEEIx0rA6PBnCQ/viewform?usp=header";
+    // ВСТАВЬ СВОЮ ССЫЛКУ ИЗ GOOGLE FORMS
+    let url = "https://docs.google.com/forms/d/e/1FAIpQLSc5VQU1Ygi6v-CeRc8ju4rDf6Os0_vS-vC6IEEIx0rA6PBnCQ/viewform?usp=pp_url";
 
-    // открывает форму с ответом
-    window.open(formUrl, "_blank");
+    // заменяем значения
+    url = url.replace("TEST", encodeURIComponent(name));
+    url = url.replace("Так", encodeURIComponent(choice));
 
-    result.classList.remove("hidden");
-    result.innerText = "Дякую, " + name + "! Відповідь: " + choice;
+    // меняем viewform → formResponse
+    url = url.replace("viewform", "formResponse");
+
+    fetch(url, { method: "POST", mode: "no-cors" });
+
+    document.getElementById("result").classList.remove("hidden");
+    document.getElementById("result").innerText =
+        "Дякую, " + name + "! Відповідь записано!";
 }
 </script>
 
